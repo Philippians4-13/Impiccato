@@ -4,193 +4,127 @@
 #include <limits.h>
 
 
-/* Poiché ci sono tante variabili, ho deciso di creare una sorta di catalogo in cui viene spiegata la funzione di ognuna, affinché possa subito capire
-cosa e come funziona quando ci ritorno dopo qualche tempo, così da non perdere tempo. Inoltre può essere d'aiuto per chiunque volesse dare un'occhiata
+/* Poichè ci sono tante variabili, ho deciso di creare una sorta di catalogo in cui viene spiegata la funzione di ognuna, affinché possa subito capire
+cosa e come funziona quando ci ritorno dopo qualche tempo, così, da non perdere tempo. Inoltre può essere d'aiuto per chiunque volesse dare un'occhiata
 il programma, ed è proprio per questo anche il motivo per cui ho deciso di mettere questo per iscritto.
 
 Variabili:
     -random: variabile con cui genero un numero casuale da 1 a 10, in base al quale viene deciso quale sia la parola da indovinare
     -x: var. a cui l'utente assegna un valore con una lettera per indovinare la parola
-    -lettera[8]: array di 8 var., a ciascuna della quali viene assegnata una lettera della parola da indovinare (nell'ordine corretto), senza ripetere
-                 le doppie
+    -*parole[10]: array di 10 stringhe, a ciascuna della quali viene assegnata una parola
+    -*parola_scelta: stringa a cui viene assegnata la parola da indovinare
     -c_tentativi: var. che indica i tentativi errati dell'utente in cui questo ha cercato di indovinare una lettera della parola. Il numero massimo di
                   tentativi errati è 5 (punto in cui termina il gioco), dato che a quel punto tutti gli arti dell'impiccato sarebbero stati disegnati
-    -cost[8]: array di 8 var. che uso per "tenere a mente" le lettere già indovinate dall'utente
+    -cost[20]: array di 20 var. che uso per "tenere a mente" le lettere già  indovinate dall'utente
     -indovinato: var. che serve per determinare se la lettera inserita dall'utente è presente o meno nella parola da indovinare
+    -c_ideale: contatore che serve per capire la lunghezza della parola da indovinare
+    -c_attuale: contatore che serve per uscire dal programma quando diventa uguale a c_ideale
+    -difficolta: determinare la difficoltà  della parola da indovinare
+    -ripetibile: var. per far ripetere il gioco senza dover fare ripartire l'engine
 */
 
 
 int main()
 {
-    int random;
-    srand(time(NULL));
-    random=rand()%10+1;
-    printf("%d\n", random);
-   
-    char x, lettera[8];
-    int c_tentativi=0, cost[8]={0}, indovinato;
-   
-    if(random==1)
-    {
-        lettera[0]='t';
-        lettera[1]='a';
-        lettera[2]='v';
-        lettera[3]='o';
-        lettera[4]='l';
-        lettera[5]='i';
-        lettera[6]='n';
-        lettera[7]='o';
-    }
-    else if(random==2)
-    {
-        lettera[0]='s';
-        lettera[1]='t';
-        lettera[2]='r';
-        lettera[3]='a';
-        lettera[4]='c';
-        lettera[5]='c';
-        lettera[6]='i';
-        lettera[7]='o';
-    }
-    else if(random==3)
-    {
-        lettera[0]='f';
-        lettera[1]='r';
-        lettera[2]='u';
-        lettera[3]='l';
-        lettera[4]='l';
-        lettera[5]='a';
-        lettera[6]='t';
-        lettera[7]='o';
-    }
-    else if(random==4)
-    {
-        lettera[0]='a';
-        lettera[1]='b';
-        lettera[2]='b';
-        lettera[3]='i';
-        lettera[4]='n';
-        lettera[5]='a';
-        lettera[6]='t';
-        lettera[7]='o';
-    }
-    else if(random==5)
-    {
-        lettera[0]='v';
-        lettera[1]='i';
-        lettera[2]='c';
-        lettera[3]='h';
-        lettera[4]='i';
-        lettera[5]='n';
-        lettera[6]='g';
-        lettera[7]='o';
-    }
-    else if(random==6)
-    {
-        lettera[0]='s';
-        lettera[1]='a';
-        lettera[2]='g';
-        lettera[3]='g';
-        lettera[4]='e';
-        lettera[5]='z';
-        lettera[6]='z';
-        lettera[7]='a';
-    }
-    else if(random==7)
-    {
-        lettera[0]='z';
-        lettera[1]='u';
-        lettera[2]='c';
-        lettera[3]='c';
-        lettera[4]='h';
-        lettera[5]='e';
-        lettera[6]='r';
-        lettera[7]='o';
-    }
-    else if(random==8)
-    {
-        lettera[0]='c';
-        lettera[1]='o';
-        lettera[2]='m';
-        lettera[3]='p';
-        lettera[4]='l';
-        lettera[5]='e';
-        lettera[6]='t';
-        lettera[7]='o';
-    }
-    else if(random==9)
-    {
-        lettera[0]='e';
-        lettera[1]='l';
-        lettera[2]='e';
-        lettera[3]='f';
-        lettera[4]='a';
-        lettera[5]='n';
-        lettera[6]='t';
-        lettera[7]='e';
-    }
-    else if(random==10)
-    {
-        lettera[0]='u';
-        lettera[1]='n';
-        lettera[2]='i';
-        lettera[3]='f';
-        lettera[4]='o';
-        lettera[5]='r';
-        lettera[6]='m';
-        lettera[7]='e';
-    }
-   
-   
-    printf("Indovina la parola, hai un massimo di 5 tentativi\n\n\n");
-    do
-    {
-        printf("\n\n\nparola: ");
-        for (int i = 0; i < 8; i++)
-        {
-            if(cost[i]==1)
-            printf("%c ", lettera[i]);
-            else
-            printf("_ ");
-        }
-        if(cost[0]==1 && cost[1]==1 && cost[2]==1 && cost[3]==1 && cost[4]==1 && cost[5]==1 && cost[6]==1 && cost[7]==1)
-        {
-            printf("\nCongratulazioni! Hai indovinato la parola");
-            return 0;
-        }
-        printf("\ninserisci una lettera: ");
-        scanf(" %c", &x);
-        if(x<97)
-        x+=32;
-        indovinato=0;
-        for (int i = 0; i < 8; i++)
-        {
-            if(x==lettera[i])
-            {
-                if(cost[i]==0)
-                {
-                    cost[i]++;
-                    indovinato++;
-                }
-                else
-                {
-                    c_tentativi++;
-                    printf("lettera già usata!\n");
-                    if(c_tentativi<5)
-                    printf("Hai ancora %d tentativo/i\n", 5-c_tentativi);
-                    indovinato++; /*se pur la lettera non è stata indovinata, incremento comunque la variabile
-                                    per evitare che vengano sottrati più di un tentativo per errore*/
-                }
-            }
-        }
-        if(indovinato==0)
-        {
-            printf("Lettera errata! ");
-            c_tentativi++;
-            if(c_tentativi<5)
-            printf("Riprova, hai ancora %d tentativo/i", 5-c_tentativi);
-        }
-        if(c_tentativi==5)
-        printf("Hai esaurito i tentativi!");
-    }while(c_tentativi<5);
+	int random, difficolta;
+	int c_tentativi, indovinato, c_ideale, c_attuale, cost[20], ripetibile;
+	char *parola_scelta, x, *parole[25]=
+	{
+		"penna",        //1
+		"burro",        //2
+		"aspro",        //3
+		"arido",        //4
+		"zaino",        //5
+		"acceso",       //6
+		"bianco",       //7
+		"legame",       //8
+		"tavolo",       //9
+		"piatto",       //10
+		"normale",      //11
+		"fortuna",      //12
+		"cintura",      //13
+		"vangelo",      //14
+		"armadio",      //15
+		"straccio",     //16
+		"frullato",     //17
+		"vichingo",     //18
+		"zucchero",     //19
+		"uniforme",     //20
+		"borraccia",    //21
+		"antartide",    //22
+		"impiccato",    //23
+		"preghiera",    //24
+		"domestico",    //25
+	};
+	srand(time(NULL));
+	do
+	{
+		c_tentativi=0, c_ideale=0, c_attuale=0;
+		for (int i = 0; i < 20; i++)
+			cost[i]=0;
+		random=rand()%5;
+		do
+		{
+			printf("Inserisci la difficolta che vuoi riscontrare (da 1 a 5): ");
+			scanf("%d", &difficolta);
+		}while(difficolta<1 || difficolta>5);
+		parola_scelta = parole[random+5*(difficolta-1)];
+		while(parola_scelta[c_ideale]!='\0')
+			c_ideale++;
+		printf("Indovina la parola, hai un massimo di 5 tentativi\n\n\n");
+		do
+		{
+			printf("\n\n\nparola: ");
+			for (int i = 0; i < c_ideale; i++)
+			{
+				if(cost[i]==1)
+					printf("%c ", parola_scelta[i]);
+				else
+					printf("_ ");
+			}
+			printf("\ninserisci una lettera: ");
+			scanf(" %c", &x);
+			if(x<97)
+				x+=32;
+			indovinato=0;
+			for (int i = 0; i < c_ideale; i++)
+			{
+				if(x==parola_scelta[i])
+				{
+					if(cost[i]==0)
+					{
+						cost[i]++;
+						indovinato++;
+						c_attuale++;
+					}
+					else
+					{
+						c_tentativi++;
+						printf("Lettera giC  usata!\n");
+						if(c_tentativi<5)
+							printf("Hai ancora %d tentativo/i\n", 5-c_tentativi);
+						indovinato++; /*se pur la lettera non C( stata indovinata, incremento comunque la variabile
+                                    per evitare che vengano sottrati piC9 di un tentativo per errore*/
+						break;
+					}
+				}
+			}
+			if(indovinato==0)
+			{
+				printf("Lettera errata! ");
+				c_tentativi++;
+				if(c_tentativi<5)
+					printf("Riprova, hai ancora %d tentativo/i", 5-c_tentativi);
+			}
+			if(c_tentativi==5)
+				printf("Hai esaurito i tentativi!");
+			if(c_attuale==c_ideale)
+			{
+			    printf("\nCongratulazioni! Hai indovinato la parola");
+		        c_tentativi=5;
+			}
+		}while(c_tentativi<5);
+		printf("\n\n\n\n\n\n\n\nVuoi giocare di nuovo?\nInserisci '1' per continuare e qualsiasi altra cosa per terminare: ");
+		scanf("%d", &ripetibile);
+	}while(ripetibile==1);
 }
